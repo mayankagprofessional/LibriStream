@@ -18,20 +18,19 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(
-   name = "app_user"
-)
+@Table(name = "app_user")
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
+@Builder
+@Getter
+@Setter
 public class User implements UserDetails {
 
     @Id
@@ -47,7 +46,8 @@ public class User implements UserDetails {
     private String lastname;
 
     @NotNull
-    private Integer age;
+    @Size(min = 18)
+    private Integer age;        // Minimum 18 years restriction to use the app
 
     @Column(nullable = false, unique = true)
     @NotBlank
@@ -62,9 +62,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(
-      fetch = FetchType.LAZY
-    )
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
       name = "user_interest_genre",
       joinColumns = {@JoinColumn(name = "user_id")},
@@ -72,18 +70,11 @@ public class User implements UserDetails {
     )
     private List<Genre> interests;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean active;
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
-      return List.of(new SimpleGrantedAuthority(this.role.name()));
+      return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     public String getUsername() {
-      return this.email;
-    }
-
-    public boolean isEnabled() {
-      return this.active;
+      return email;
     }
 }

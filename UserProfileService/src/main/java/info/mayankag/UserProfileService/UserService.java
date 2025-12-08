@@ -14,7 +14,7 @@ public class UserService {
    }
 
    public List<User> getAllUsers() {
-      return this.userRepository.findAll();
+      return userRepository.findAll();
    }
 
    public boolean registerUser(RegisterInputDto registerInputDto) {

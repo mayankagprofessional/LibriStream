@@ -9,6 +9,8 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    @Value("{jwt.secret-key}")
-    private static String SECRET_KEY;
+    @Value("{secretkey}")
+    private String SECRET_KEY;
 
     /**
      * This method is used to extract username from JWT token
@@ -44,6 +46,34 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     * This method is used to check whether the JWT Token is valid or not
+     * @param token JWT Token to be checked
+     * @param userDetails User details to check JWT token against
+     * @return Result of JWT Token check
+     */
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !(isTokenExpired(token)));
+    }
+
+    /**
+     * This method is used to check whether the JWT token has expired or not
+     * @param token JWT Token for which the expiration is checked
+     * @return Status of the JWT Token expiration check
+     */
+    public boolean isTokenExpired(String token) {
+        return extractTokenExpiration(token).before(new Date());
+    }
+
+    /**
+     * This method returns the expiration date of the JWT token
+     * @param token JWT token for which the expiration is extracted
+     * @return Date of the JWT Token Expiration
+     */
+    private Date extractTokenExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
 
     /**
      * This method is used to extract individual claim from JWT Token
