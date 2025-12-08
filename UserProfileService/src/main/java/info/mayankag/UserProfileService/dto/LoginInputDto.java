@@ -1,21 +1,19 @@
 package info.mayankag.UserProfileService.dto;
 
-import info.mayankag.UserProfileService.entity.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import info.mayankag.UserProfileService.CustomAnnotation.StrongPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
 @Builder
 public class LoginInputDto {
 
-    @NotBlank
+    @NotBlank(message = "Email is required")
     @Email
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Password is required")
+    @StrongPassword
     private String password;
 }

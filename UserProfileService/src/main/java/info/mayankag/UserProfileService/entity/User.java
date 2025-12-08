@@ -12,13 +12,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
+
 import java.util.Collection;
 import java.util.List;
 
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -46,7 +44,7 @@ public class User implements UserDetails {
     private String lastname;
 
     @NotNull
-    @Size(min = 18)
+    @Min(value = 18, message = "Age must be at least 18")
     private Integer age;        // Minimum 18 years restriction to use the app
 
     @Column(nullable = false, unique = true)
