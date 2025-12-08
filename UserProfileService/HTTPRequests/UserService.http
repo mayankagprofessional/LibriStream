@@ -1,0 +1,13 @@
+### Register User
+POST http://localhost:8080/api/user/register
+
+{
+    "firstname": "Mayank",
+    "lastname": "Agarwal",
+    "age": 30,
+    "email": "mayankagofficial@gmail.com",
+    "password": "GoodPassword",
+    "role": "ADMIN"
+}
+
+### Login User
