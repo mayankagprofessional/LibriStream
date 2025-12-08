@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "firstname": null,
+    "lastname": null,
+    "age": 0,
+    "email": null,
+    "password": null,
+    "role": null
+  },
+  {
+    "id": 2,
+    "firstname": "Monika",
+    "lastname": "Singh",
+    "age": 50,
+    "email": "monikasingh@gmail.com",
+    "password": "NotSoSecure",
+    "role": "ADMIN"
+  },
+  {
+    "id": 3,
+    "firstname": "Monika",
+    "lastname": "Singh",
+    "age": 50,
+    "email": "monikasingh@gmail.com",
+    "password": "NotSoSecure",
+    "role": "ADMIN"
+  }
+]

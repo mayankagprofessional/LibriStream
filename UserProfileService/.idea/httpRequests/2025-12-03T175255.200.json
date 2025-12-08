@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "firstname": "Mayank",
+    "lastname": "Agarwal",
+    "age": 30,
+    "email": "mayankagofficial@gmail.com",
+    "password": "GoodPassword",
+    "role": "USER"
+  }
+]
