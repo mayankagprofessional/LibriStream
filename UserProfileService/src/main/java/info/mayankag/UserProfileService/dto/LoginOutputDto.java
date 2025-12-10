@@ -1,6 +1,5 @@
 package info.mayankag.UserProfileService.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +8,5 @@ import lombok.Data;
 public class LoginOutputDto {
 
     private String token;
-
-    @NotBlank
     private String message;
 }

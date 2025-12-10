@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    @Value("{secretkey}")
-    private String SECRET_KEY;
+    @Value("${security.jwt.secret-key}")
+    private String secretKey;
 
     /**
      * This method is used to extract username from JWT token
@@ -105,7 +104,7 @@ public class JwtService {
      * @return Returns the Key which is used to Sign JWT Token
      */
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

@@ -44,7 +44,7 @@ public class User implements UserDetails {
     private String lastname;
 
     @NotNull
-    @Min(value = 18, message = "Age must be at least 18")
+    @Min(value = 18, message = "User must be at least 18 years old")
     private Integer age;        // Minimum 18 years restriction to use the app
 
     @Column(nullable = false, unique = true)
