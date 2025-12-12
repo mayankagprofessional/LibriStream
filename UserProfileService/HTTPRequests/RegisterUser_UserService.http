@@ -22,18 +22,6 @@ Content-Type: application/json
   "password": "GoodPassword@123"
 }
 
-### Login User
-POST http://localhost:8080/api/user/login
-Content-Type: application/json
-
-{
-    "email": "mayankagofficial@gmail.com",
-    "password": "GoodPassword"
-}
-
-### Get All Users
-GET http://localhost:8080/api/user/
-
 ### Register 3rd User
 POST http://localhost:8080/api/user/register
 Content-Type: application/json
@@ -41,7 +29,7 @@ Content-Type: application/json
 {
   "firstName": "Sanu",
   "lastName": "Agarwal",
-  "age": 10,
+  "age": 18,
   "email": "sanuagarwal@gmail.com",
   "password": "GoodPassword@123456"
 }

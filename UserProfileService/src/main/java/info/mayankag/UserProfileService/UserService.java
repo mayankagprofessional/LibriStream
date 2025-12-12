@@ -4,6 +4,7 @@ import info.mayankag.UserProfileService.dto.*;
 import info.mayankag.UserProfileService.entity.Role;
 import info.mayankag.UserProfileService.entity.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +38,12 @@ public class UserService {
 
     public Slice<GetAllUsersDto> getAllUsers(int page) {
 
-        Pageable pageable = PageRequest.of(page, paginationSize);
+        if(page < 1 )
+        {
+            return new SliceImpl<>(new ArrayList<>());
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, paginationSize);
         Slice<User> userSlice = userRepository.findAll(pageable);
 
         return userSlice.map(user -> GetAllUsersDto.builder()

@@ -14,9 +14,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Slice<GetAllUsersDto>> getAllUsers(
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(defaultValue = "1") int page) {
       return ResponseEntity.ok(userService.getAllUsers(page));
     }
 
