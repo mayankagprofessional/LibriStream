@@ -1,4 +1,4 @@
-package info.mayankag.UserProfileService;
+package info.mayankag.UserProfileService.repository;
 
 import info.mayankag.UserProfileService.entity.User;
 import java.util.Optional;

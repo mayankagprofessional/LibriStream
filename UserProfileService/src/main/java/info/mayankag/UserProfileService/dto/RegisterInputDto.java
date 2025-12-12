@@ -11,12 +11,12 @@ public class RegisterInputDto {
 
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
-    @Pattern(regexp = "^[a-zA-Z\\s']+$", message = "Name usually contains letters and spaces only")
+    @Pattern(regexp = "^[a-zA-Z\\s']+$", message = "First name usually contains letters and spaces only")
     private String firstName;
 
     @NotBlank(message = "Last name is required")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
-    @Pattern(regexp = "^[a-zA-Z\\s']+$", message = "Last Name usually contains letters only")
+    @Pattern(regexp = "^[a-zA-Z\\s']+$", message = "Last name usually contains letters only")
     private String lastName;
 
     @NotNull

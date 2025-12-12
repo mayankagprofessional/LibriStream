@@ -1,4 +1,4 @@
-package info.mayankag.UserProfileService;
+package info.mayankag.UserProfileService.service;
 
 import info.mayankag.UserProfileService.dto.*;
 import info.mayankag.UserProfileService.entity.Role;
@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import info.mayankag.UserProfileService.repository.UserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;

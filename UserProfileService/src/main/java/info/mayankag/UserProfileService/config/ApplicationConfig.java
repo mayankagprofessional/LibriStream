@@ -1,6 +1,6 @@
 package info.mayankag.UserProfileService.config;
 
-import info.mayankag.UserProfileService.UserRepository;
+import info.mayankag.UserProfileService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

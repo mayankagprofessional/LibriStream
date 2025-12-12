@@ -1,4 +1,4 @@
-package info.mayankag.UserProfileService;
+package info.mayankag.UserProfileService.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

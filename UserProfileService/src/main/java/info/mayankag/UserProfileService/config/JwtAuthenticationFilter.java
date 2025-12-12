@@ -1,6 +1,6 @@
 package info.mayankag.UserProfileService.config;
 
-import info.mayankag.UserProfileService.JwtService;
+import info.mayankag.UserProfileService.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
