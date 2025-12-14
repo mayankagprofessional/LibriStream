@@ -1,5 +1,6 @@
 package info.mayankag.UserProfileService.service;
 
+import billing.BillingResponse;
 import info.mayankag.UserProfileService.dto.*;
 import info.mayankag.UserProfileService.entity.Role;
 import info.mayankag.UserProfileService.entity.User;
@@ -10,6 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import info.mayankag.UserProfileService.grpc.BillingServiceGrpcClient;
+import info.mayankag.UserProfileService.kafka.KafkaProducer;
 import info.mayankag.UserProfileService.repository.UserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -33,6 +36,8 @@ public class UserService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final Validator validator;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
+    private final KafkaProducer kafkaProducer;
 
     @Value("${pagination-size}")
     private int paginationSize;
@@ -82,6 +87,21 @@ public class UserService {
         }
 
         userRepository.save(user);
+
+        // Created User in Billing Service
+        BillingResponse billingResponse = billingServiceGrpcClient.createBillingAccount(
+                user.getId().toString(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail()
+        );
+
+        // Updated Billing Account ID to the current user
+        user.setBillingAccountId(billingResponse.getAccountId());
+        userRepository.save(user);
+
+        // Notify Users of account creation
+        kafkaProducer.notifyUserCreated(user);
 
         return RegisterOutputDto
                 .builder()

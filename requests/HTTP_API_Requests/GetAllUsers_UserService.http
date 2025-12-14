@@ -1,5 +1,5 @@
 ### Get All Users (1st Page)
-GET http://localhost:8080/api/user?page=1
+GET http://localhost:4000/api/user?page=1
 
 ### Get All Users (2nd Page)
-GET http://localhost:8080/api/user?page=2
+GET http://localhost:4000/api/user?page=2

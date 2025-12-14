@@ -68,6 +68,8 @@ public class User implements UserDetails {
     )
     private List<Genre> interests;
 
+    private String billingAccountId;
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
       return List.of(new SimpleGrantedAuthority(role.name()));
     }

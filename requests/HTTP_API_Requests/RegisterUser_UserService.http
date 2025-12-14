@@ -1,17 +1,17 @@
 ### Register User
-POST http://localhost:8080/api/user/register
+POST http://localhost:4000/api/user/register
 Content-Type: application/json
 
 {
-    "firstName": "Mayank",
-    "lastName": "Agarwal",
+    "firstName": "Mayank7",
+    "lastName": "Agarwal7",
     "age": 30,
-    "email": "mayankagofficial@gmail.com",
+    "email": "mayankagofficial7@gmail.com",
     "password": "GoodPassword"
 }
 
 ### Register 2nd User
-POST http://localhost:8080/api/user/register
+POST http://localhost:4000/api/user/register
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### Register 3rd User
-POST http://localhost:8080/api/user/register
+POST http://localhost:4000/api/user/register
 Content-Type: application/json
 
 {
