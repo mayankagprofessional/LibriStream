@@ -1,0 +1,9 @@
+### Create Billing Account
+GRPC localhost:9001/BillingService/CreateBillingAccount
+
+{
+  "userId": "user1",
+  "firstName": "Sanu",
+  "lastName": "Agarwal",
+  "email": "sanuagarwal@gmail.com"
+}
