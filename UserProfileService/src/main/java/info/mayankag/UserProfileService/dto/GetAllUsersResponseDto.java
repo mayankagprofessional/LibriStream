@@ -2,13 +2,13 @@ package info.mayankag.UserProfileService.dto;
 
 import info.mayankag.UserProfileService.entity.Genre;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 @Builder
-public class GetAllUsersDto {
+public class GetAllUsersResponseDto {
 
     private String firstname;
     private String lastname;

@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class RegisterInputDto {
+public class RegisterRequestDto {
 
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")

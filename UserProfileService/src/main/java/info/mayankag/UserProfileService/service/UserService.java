@@ -14,19 +14,20 @@ import java.util.stream.Collectors;
 import info.mayankag.UserProfileService.grpc.BillingServiceGrpcClient;
 import info.mayankag.UserProfileService.kafka.KafkaProducer;
 import info.mayankag.UserProfileService.repository.UserRepository;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -34,7 +35,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
     private final Validator validator;
     private final BillingServiceGrpcClient billingServiceGrpcClient;
     private final KafkaProducer kafkaProducer;
@@ -42,7 +42,7 @@ public class UserService {
     @Value("${pagination-size}")
     private int paginationSize;
 
-    public Slice<GetAllUsersDto> getAllUsers(int page) {
+    public Slice<GetAllUsersResponseDto> getAllUsers(int page) {
 
         if(page < 1 )
         {
@@ -52,7 +52,7 @@ public class UserService {
         Pageable pageable = PageRequest.of(page - 1, paginationSize);
         Slice<User> userSlice = userRepository.findAll(pageable);
 
-        return userSlice.map(user -> GetAllUsersDto.builder()
+        return userSlice.map(user -> GetAllUsersResponseDto.builder()
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .email(user.getEmail())
@@ -61,18 +61,23 @@ public class UserService {
                 .build());
     }
 
-    public RegisterOutputDto registerUser(RegisterInputDto registerInputDto) {
+    public Optional<String> registerUser(RegisterRequestDto registerRequestDto) {
+
+        if(registerRequestDto.getEmail() == null || registerRequestDto.getEmail().isEmpty()) {
+            return "Email field is missing".describeConstable();
+        }
 
         // Map the DTO to Entity Class
         var user = User.builder()
-                .firstname(registerInputDto.getFirstName())
-                .lastname(registerInputDto.getLastName())
-                .email(registerInputDto.getEmail())
-                .age(registerInputDto.getAge())
-                .password(passwordEncoder.encode(registerInputDto.getPassword()))
+                .firstname(registerRequestDto.getFirstName())
+                .lastname(registerRequestDto.getLastName())
+                .email(registerRequestDto.getEmail())
+                .age(registerRequestDto.getAge())
+                .password(passwordEncoder.encode(registerRequestDto.getPassword()))
                 .role(Role.USER)
                 .build();
 
+        // Check if violations occurred for the error
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         if (!violations.isEmpty()) {
             // Extract the violation message
@@ -80,10 +85,10 @@ public class UserService {
                     .map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(", "));
 
-            return RegisterOutputDto
-                    .builder()
-                    .message("User registration failed! Reason: " + errorReason)
-                    .build();
+            // Log the reason for the failure
+            log.error("User registration failed for user {}: {}", user.getEmail(),errorReason);
+
+            return errorReason.describeConstable();
         }
 
         userRepository.save(user);
@@ -103,36 +108,24 @@ public class UserService {
         // Notify Users of account creation
         kafkaProducer.notifyUserCreated(user);
 
-        return RegisterOutputDto
-                .builder()
-                .message("User registered successfully!")
-                .build();
+        return Optional.empty();
     }
 
-    public LoginOutputDto loginUser(LoginInputDto loginInputDto) {
+    public Optional<String> loginUser(LoginRequestDto loginInputDto) {
 
-        // Authenticate User
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginInputDto.getEmail(),
-                        loginInputDto.getPassword()
-                )
-        );
+        // Check credentials and return the JWT Token if credentials match
+        return userRepository
+                .findByEmail(loginInputDto.getEmail())
+                .filter(u -> passwordEncoder.matches(loginInputDto.getPassword(), u.getPassword()))
+                .map(u -> jwtService.generateToken(new HashMap<>(), u));
+    }
 
-        // Check whether user is present or not
-        Optional<User> user = userRepository.findByEmail(loginInputDto.getEmail());
-        if(user.isPresent()) {
-            final String jwtToken = jwtService.generateToken(new HashMap<>(), user.get());
-            return LoginOutputDto
-                    .builder()
-                    .message("Login successful!")
-                    .token(jwtToken)
-                    .build();
+    public boolean validateToken(String token) {
+        try {
+            jwtService.validateToken(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
         }
-
-        return LoginOutputDto
-                    .builder()
-                    .message("Email or Password is incorrect!")
-                    .build();
     }
 }

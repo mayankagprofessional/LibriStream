@@ -7,7 +7,7 @@ import lombok.*;
 
 @Data
 @Builder
-public class LoginInputDto {
+public class LoginRequestDto {
 
     @NotBlank(message = "Email is required")
     @Email
