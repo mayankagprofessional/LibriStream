@@ -26,6 +26,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -42,6 +43,7 @@ public class UserService {
     @Value("${pagination-size}")
     private int paginationSize;
 
+    @Transactional(readOnly = true)
     public Slice<GetAllUsersResponseDto> getAllUsers(int page) {
 
         if(page < 1 )
@@ -61,6 +63,7 @@ public class UserService {
                 .build());
     }
 
+    @Transactional
     public Optional<String> registerUser(RegisterRequestDto registerRequestDto) {
 
         if(registerRequestDto.getEmail() == null || registerRequestDto.getEmail().isEmpty()) {
@@ -111,6 +114,7 @@ public class UserService {
         return Optional.empty();
     }
 
+    @Transactional(readOnly = true)
     public Optional<String> loginUser(LoginRequestDto loginInputDto) {
 
         // Check credentials and return the JWT Token if credentials match
