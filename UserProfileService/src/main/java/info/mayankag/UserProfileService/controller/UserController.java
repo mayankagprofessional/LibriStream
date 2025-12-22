@@ -1,5 +1,6 @@
 package info.mayankag.UserProfileService.controller;
 
+import info.mayankag.UserProfileService.service.CacheInspectionService;
 import info.mayankag.UserProfileService.service.UserService;
 import info.mayankag.UserProfileService.dto.*;
 
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final CacheInspectionService cacheInspectionService;
 
     @GetMapping
     @Operation(summary = "Get Users", description = "Return users with Pagination")
@@ -76,5 +78,11 @@ public class UserController {
         return userService.validateToken(authHeader.substring(7))
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @GetMapping("/readCache")
+    public ResponseEntity<Void> readCacheData(@RequestParam String cacheName) {
+        cacheInspectionService.printCacheContents(cacheName);
+        return ResponseEntity.noContent().build();
     }
 }

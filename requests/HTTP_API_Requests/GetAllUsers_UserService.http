@@ -3,3 +3,6 @@ GET http://localhost:4000/api/user?page=1
 
 ### Get All Users (2nd Page)
 GET http://localhost:4000/api/user?page=2
+
+### Read Cache Data
+GET http://localhost:4000/api/user/readCache?cacheName=getallusers

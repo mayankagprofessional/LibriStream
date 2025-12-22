@@ -20,6 +20,7 @@ import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -40,10 +41,14 @@ public class UserService {
     private final BillingServiceGrpcClient billingServiceGrpcClient;
     private final KafkaProducer kafkaProducer;
 
+    @Value("${spring.cache.cache-names}")
+    private final String cacheName = "getallusers";
+
     @Value("${pagination-size}")
     private int paginationSize;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = cacheName, key = "#page")
     public Slice<GetAllUsersResponseDto> getAllUsers(int page) {
 
         if(page < 1 )
@@ -59,7 +64,10 @@ public class UserService {
                 .lastname(user.getLastname())
                 .email(user.getEmail())
                 .age(user.getAge())
-                .interests(user.getInterests())
+                .interests(user.getInterests()
+                        .stream()
+                        .map(genre -> new GenreDto(genre.getId(), genre.getName()))
+                        .toList())
                 .build());
     }
 

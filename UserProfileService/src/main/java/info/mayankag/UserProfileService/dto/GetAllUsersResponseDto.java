@@ -1,18 +1,19 @@
 package info.mayankag.UserProfileService.dto;
 
-import info.mayankag.UserProfileService.entity.Genre;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Builder
-public class GetAllUsersResponseDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class GetAllUsersResponseDto implements Serializable {
 
     private String firstname;
     private String lastname;
     private String email;
     private Integer age;
-    private List<Genre> interests;
+    private List<GenreDto> interests;
 }
