@@ -45,6 +45,9 @@ fabric.properties
 hs_err_pid*
 replay_pid*
 
+### Environment Variables ###
+.env
+
 ### macOS ###
 # General
 .DS_Store
@@ -77,3 +80,6 @@ Temporary Items
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
+
+### VSCode ###
+.vscode/

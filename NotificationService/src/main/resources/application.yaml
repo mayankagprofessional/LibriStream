@@ -2,7 +2,7 @@ spring:
   application:
     name: NotificationService
   kafka:
-    bootstrap-servers: 192.168.33.5:9094
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
