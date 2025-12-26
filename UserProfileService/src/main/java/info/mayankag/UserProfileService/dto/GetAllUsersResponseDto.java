@@ -1,19 +1,19 @@
 package info.mayankag.UserProfileService.dto;
 
-import lombok.*;
-
+import lombok.Builder;
 import java.io.Serializable;
 import java.util.List;
 
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class GetAllUsersResponseDto implements Serializable {
+public record GetAllUsersResponseDto(
+        String firstname,
+        String lastname,
+        String email,
+        Integer age,
+        List<GenreDto> interests
+) implements Serializable {
 
-    private String firstname;
-    private String lastname;
-    private String email;
-    private Integer age;
-    private List<GenreDto> interests;
+    public GetAllUsersResponseDto {
+        interests = (interests == null) ? List.of() : List.copyOf(interests);
+    }
 }

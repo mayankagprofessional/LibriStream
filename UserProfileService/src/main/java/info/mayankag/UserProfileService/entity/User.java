@@ -24,11 +24,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "app_user")
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Setter
 public class User implements UserDetails {
 
     @Id
@@ -68,6 +67,7 @@ public class User implements UserDetails {
     )
     private List<Genre> interests;
 
+    @Setter
     private String billingAccountId;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -77,4 +77,5 @@ public class User implements UserDetails {
     public String getUsername() {
       return email;
     }
+
 }

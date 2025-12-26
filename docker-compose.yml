@@ -8,6 +8,8 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      USER_DB_NAME: ${USER_DB_NAME}
+      BILLING_DB_NAME: ${BILLING_DB_NAME}
       POSTGRES_INITDB_ARGS: "-c wal_level=replica -c max_wal_senders=10"
     ports:
       - "5432:5432"
@@ -43,9 +45,12 @@ services:
       - bash
       - -c
       - |
-        pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U rahul -v -P -W &&
-        echo "standby_mode = 'on'" >> /var/lib/postgresql/data/recovery.conf &&
-        postgres
+        rm -rf /var/lib/postgresql/data/*
+        pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U ${POSTGRES_USER} -v -P -w
+        touch /var/lib/postgresql/data/standby.signal
+        chown -R postgres:postgres /var/lib/postgresql/data
+        chmod 700 /var/lib/postgresql/data
+        exec gosu postgres postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${USER_DB_NAME}"]
       interval: 10s
@@ -73,9 +78,12 @@ services:
       - bash
       - -c
       - |
-        pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U rahul -v -P -W &&
-        echo "standby_mode = 'on'" >> /var/lib/postgresql/data/recovery.conf &&
-        postgres
+        rm -rf /var/lib/postgresql/data/*
+        pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U ${POSTGRES_USER} -v -P -w
+        touch /var/lib/postgresql/data/standby.signal
+        chown -R postgres:postgres /var/lib/postgresql/data
+        chmod 700 /var/lib/postgresql/data
+        exec gosu postgres postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${USER_DB_NAME}"]
       interval: 10s

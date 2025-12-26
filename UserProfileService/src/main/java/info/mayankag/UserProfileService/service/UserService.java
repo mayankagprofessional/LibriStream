@@ -41,14 +41,11 @@ public class UserService {
     private final BillingServiceGrpcClient billingServiceGrpcClient;
     private final KafkaProducer kafkaProducer;
 
-    @Value("${spring.cache.cache-names}")
-    private final String cacheName = "getallusers";
-
     @Value("${pagination-size}")
     private int paginationSize;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = cacheName, key = "#page")
+    @Cacheable(value = "${spring.cache.cache-names}", key = "#page")
     public Slice<GetAllUsersResponseDto> getAllUsers(int page) {
 
         if(page < 1 )
@@ -74,17 +71,17 @@ public class UserService {
     @Transactional
     public Optional<String> registerUser(RegisterRequestDto registerRequestDto) {
 
-        if(registerRequestDto.getEmail() == null || registerRequestDto.getEmail().isEmpty()) {
+        if(registerRequestDto.email() == null || registerRequestDto.email().isEmpty()) {
             return "Email field is missing".describeConstable();
         }
 
         // Map the DTO to Entity Class
         var user = User.builder()
-                .firstname(registerRequestDto.getFirstName())
-                .lastname(registerRequestDto.getLastName())
-                .email(registerRequestDto.getEmail())
-                .age(registerRequestDto.getAge())
-                .password(passwordEncoder.encode(registerRequestDto.getPassword()))
+                .firstname(registerRequestDto.firstName())
+                .lastname(registerRequestDto.lastName())
+                .email(registerRequestDto.email())
+                .age(registerRequestDto.age())
+                .password(passwordEncoder.encode(registerRequestDto.password()))
                 .role(Role.USER)
                 .build();
 
@@ -127,8 +124,8 @@ public class UserService {
 
         // Check credentials and return the JWT Token if credentials match
         return userRepository
-                .findByEmail(loginInputDto.getEmail())
-                .filter(u -> passwordEncoder.matches(loginInputDto.getPassword(), u.getPassword()))
+                .findByEmail(loginInputDto.email())
+                .filter(u -> passwordEncoder.matches(loginInputDto.password(), u.getPassword()))
                 .map(u -> jwtService.generateToken(new HashMap<>(), u));
     }
 

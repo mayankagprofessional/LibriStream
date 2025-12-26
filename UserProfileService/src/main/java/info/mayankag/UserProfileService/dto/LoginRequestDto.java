@@ -3,17 +3,17 @@ package info.mayankag.UserProfileService.dto;
 import info.mayankag.UserProfileService.CustomAnnotation.StrongPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Builder;
 
-@Data
 @Builder
-public class LoginRequestDto {
+public record LoginRequestDto(
+        @NotBlank(message = "Email is required")
+        @Email
+        String email,
 
-    @NotBlank(message = "Email is required")
-    @Email
-    private String email;
+        @NotBlank(message = "Password is required")
+        @StrongPassword
+        String password
+) {
 
-    @NotBlank(message = "Password is required")
-    @StrongPassword
-    private String password;
 }

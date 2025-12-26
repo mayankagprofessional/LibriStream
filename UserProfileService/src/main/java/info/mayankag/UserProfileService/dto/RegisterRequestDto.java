@@ -3,30 +3,30 @@ package info.mayankag.UserProfileService.dto;
 import info.mayankag.UserProfileService.CustomAnnotation.StrongPassword;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
-import lombok.Data;
 
-@Data
 @Builder
-public class RegisterRequestDto {
+public record RegisterRequestDto(
 
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
     @Pattern(regexp = "^[a-zA-Z\\s']+$", message = "First name usually contains letters and spaces only")
-    private String firstName;
+    String firstName,
 
     @NotBlank(message = "Last name is required")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
     @Pattern(regexp = "^[a-zA-Z\\s']+$", message = "Last name usually contains letters only")
-    private String lastName;
+    String lastName,
 
     @NotNull
-    private Integer age;
+    Integer age,
 
     @NotBlank(message = "Email is required")
     @Email
-    private String email;
+    String email,
 
     @NotBlank(message = "Password is required")
     @StrongPassword
-    private String password;
+    String password
+    ) {
+
 }
