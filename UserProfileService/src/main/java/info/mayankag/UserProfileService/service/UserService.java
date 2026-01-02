@@ -21,10 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,9 +51,9 @@ public class UserService {
         }
 
         Pageable pageable = PageRequest.of(page - 1, paginationSize);
-        Slice<User> userSlice = userRepository.findAll(pageable);
+        Page<User> userPageResult = userRepository.findAll(pageable);
 
-        return userSlice.map(user -> GetAllUsersResponseDto.builder()
+        return userPageResult.map(user -> GetAllUsersResponseDto.builder()
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .email(user.getEmail())
