@@ -12,8 +12,8 @@ import user.events.UserEvent;
 public class KafkaConsumer {
 
     @KafkaListener(
-            topics = "userEventTopic",
-            groupId = "notification-service"
+            topics = "${spring.kafka.topic.name}",
+            groupId = "{spring.kafka.consumer.group-id}"
     )
     public void receiveNotificationForUserCreated(UserEvent userEvent) {
         log.info("Received User Event for User ID :{}, Email: {}",

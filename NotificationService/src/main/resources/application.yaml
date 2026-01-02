@@ -13,6 +13,8 @@ spring:
           json:
             trusted:
               package: "*"
+    topic:
+      name: userEventTopic
 
 server:
   port: 4002
