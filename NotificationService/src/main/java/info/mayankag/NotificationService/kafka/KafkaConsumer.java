@@ -1,6 +1,5 @@
 package info.mayankag.NotificationService.kafka;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,24 +12,14 @@ import user.events.UserEvent;
 public class KafkaConsumer {
 
     @KafkaListener(
-            topics = "user",
-            groupId = "notification-service",
-            properties = {
-                "auto.offset.reset=earliest"
-            }
+            topics = "userEventTopic",
+            groupId = "notification-service"
     )
-    public void receiveNotificationForUserCreated(byte[] event) {
-        try {
-            UserEvent userEvent = UserEvent.parseFrom(event);
-
-            log.info("Received User Event for User ID :{}, Email: {}",
+    public void receiveNotificationForUserCreated(UserEvent userEvent) {
+        log.info("Received User Event for User ID :{}, Email: {}",
                     userEvent.getUserId(),
                     userEvent.getEmail());
 
-            //TODO: Send Email to User to Notify their account creation
-
-        } catch (InvalidProtocolBufferException e) {
-            log.error("Error deserializing UserEvent {}", e.getMessage());
-        }
+        //TODO: Send Email to User to Notify their account creation
     }
 }

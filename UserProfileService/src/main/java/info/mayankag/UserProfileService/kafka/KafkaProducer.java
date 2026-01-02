@@ -3,7 +3,11 @@ package info.mayankag.UserProfileService.kafka;
 import info.mayankag.UserProfileService.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import user.events.UserEvent;
 
@@ -12,7 +16,10 @@ import user.events.UserEvent;
 @RequiredArgsConstructor
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, byte[]> kafkaTemplate;
+    @Value("${spring.kafka.topic-name}")
+    private String kafkaTopic;
+
+    private final KafkaTemplate<String, UserEvent> kafkaTemplate;
 
     public void notifyUserCreated(User user) {
         UserEvent event = UserEvent
@@ -24,10 +31,11 @@ public class KafkaProducer {
                 .setEventType("USER_CREATED")
                 .build();
 
-        try {
-            kafkaTemplate.send("user", event.toByteArray());
-        } catch (Exception e) {
-            log.error("Error sending UserCreatedEvent to Kafka: {}", event);
-        }
+        Message<UserEvent> userEventMessage = MessageBuilder
+                .withPayload(event)
+                .setHeader(KafkaHeaders.TOPIC, kafkaTopic)
+                .build();
+
+        kafkaTemplate.send(userEventMessage);
     }
 }
